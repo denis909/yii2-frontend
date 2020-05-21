@@ -70,6 +70,11 @@ class FrontendController extends \yii\web\Controller
             }
         }
 
+        if (count($return['access']['rules']) == 0)
+        {
+            unset($return['access']);
+        }
+
         return $return;
     }
 
