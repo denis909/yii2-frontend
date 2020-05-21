@@ -18,6 +18,8 @@ class FrontendController extends \yii\web\Controller
 
     public $permissions = [];
 
+    public $userActions = [];
+
     /**
      * {@inheritdoc}
      */
@@ -27,15 +29,20 @@ class FrontendController extends \yii\web\Controller
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => []
-            ]
-        ];
-
-        if ($this->permissions || $this->roles)
-        {
-            $return['access'] = [
+            ],
+            'access' => [
                 'class' => AccessControl::class,
                 'user' => $this->userComponent,
                 'rules' => []
+            ]
+        ];
+
+        if ($this->userActions)
+        {
+            $return['access']['rules'][] = [
+                'allow' => true,
+                'roles' => ['@'],
+                'actions' => $this->userActions
             ];
         }
 
