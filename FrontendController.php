@@ -10,15 +10,11 @@ use yii\helpers\Url;
 class FrontendController extends \yii\web\Controller
 {
 
+    public $access = [];
+
     public $userComponent = 'user';
 
     public $postActions = [];
-
-    public $roles = [];
-
-    public $permissions = [];
-
-    public $userActions = [];
 
     /**
      * {@inheritdoc}
@@ -30,49 +26,30 @@ class FrontendController extends \yii\web\Controller
                 'class' => VerbFilter::class,
                 'actions' => []
             ],
-            'access' => [
-                'class' => AccessControl::class,
-                'user' => $this->userComponent,
-                'rules' => []
-            ]
+            'access' => array_merge(
+                [
+                    'class' => AccessControl::class,
+                    'user' => $this->userComponent,
+                    'rules' => [],
+                    'only' => []
+                ],
+                $this->access
+            )
         ];
 
-        if ($this->userActions)
+        foreach($this->postActions as $action)
         {
-            $return['access']['rules'][] = [
-                'allow' => true,
-                'roles' => ['@'],
-                'actions' => $this->userActions
-            ];
-        }
-
-        if ($this->permissions)
-        {
-            $return['access']['rules'][] = [
-                'allow' => true,
-                'permissions' => $this->permissions
-            ];
-        }
-
-        if ($this->roles)
-        {
-            $return['access']['rules'][] = [
-                'allow' => true,
-                'roles' => $this->roles
-            ];
-        }
-
-        if ($this->postActions)
-        {
-            foreach($this->postActions as $action)
-            {
-                $return['verbs']['actions'][$action][] = 'POST';
-            }
-        }
+            $return['verbs']['actions'][$action][] = 'POST';
+        }        
 
         if (count($return['access']['rules']) == 0)
         {
             unset($return['access']);
+        }
+
+        if (count($return['verbs']['actions']) == 0)
+        {
+            unset($return['verbs']);
         }
 
         return $return;
