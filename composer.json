@@ -5,5 +5,8 @@
         "psr-4": {
             "denis909\\frontend\\" : ""
         }
+    },
+    "require": {
+        "denis909/cascade-filesystem" : "*"
     }
 }
