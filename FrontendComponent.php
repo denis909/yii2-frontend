@@ -4,11 +4,12 @@ namespace denis909\frontend;
 
 use Yii;
 use yii\helpers\ArrayHelper;
+use denis909\frontend\events\FrontendMainLayoutParamsEvent;
 
 class FrontendComponent extends \yii\base\Component
 {
 
-    const EVENT_MAIN_LAYOUT_PARAMS = 'mainLayoutParams';
+    const EVENT_MAIN_LAYOUT_PARAMS = FrontendMainLayoutParamsEvent::class;
 
     public function mainLayoutParams(array $params = [], $view = null)
     {
@@ -30,6 +31,12 @@ class FrontendComponent extends \yii\base\Component
         $params['userMenu'] = ArrayHelper::getValue(Yii::$app->params, 'memberMenu', []);
         
         $params['footerMenu'] = ArrayHelper::getValue(Yii::$app->params, 'footerMenu', []);
+
+        $params['successMessages'] = (array) Yii::$app->session->getFlash('success');
+
+        $params['errorMessages'] = (array) Yii::$app->session->getFlash('error');
+
+        $params['infoMessages'] = (array) Yii::$app->session->getFlash('info');
 
         $event = new FrontendMainLayoutParamsEvent([
             'params' => $params,
