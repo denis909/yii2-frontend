@@ -7,6 +7,6 @@
         }
     },
     "require": {
-        "denis909/cascade-filesystem" : "*"
+        "denis909/yii2-cascade-config" : "*"
     }
 }
